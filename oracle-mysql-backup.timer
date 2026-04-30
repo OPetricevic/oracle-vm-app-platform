@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Oracle host MySQL/MariaDB backups nightly
+
+[Timer]
+OnCalendar=*-*-* 02:35:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

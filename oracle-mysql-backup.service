@@ -1,0 +1,6 @@
+[Unit]
+Description=Back up Oracle host MySQL/MariaDB databases
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/oracle-mysql-backup.sh

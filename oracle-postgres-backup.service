@@ -1,0 +1,8 @@
+[Unit]
+Description=Nightly PostgreSQL backup
+After=postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/oracle-postgres-backup.sh
