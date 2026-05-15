@@ -1,0 +1,19 @@
+services:
+  api:
+    image: ${IMAGE_REF:?IMAGE_REF must be set}
+    container_name: ${CONTAINER_NAME:?CONTAINER_NAME must be set}
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - ${ENV_FILE:?ENV_FILE must be set}
+    environment:
+      PORT: ${PORT:?PORT must be set}
+      UPLOADS_DIR: /app/uploads
+    volumes:
+      - ${UPLOADS_PATH:?UPLOADS_PATH must be set}:/app/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://127.0.0.1:${PORT}/api/health >/dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s

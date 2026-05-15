@@ -16,7 +16,7 @@ In GitHub:
 2. `Settings`
 3. `Environments`
 4. create:
-   - `staging`
+   - `dev`
    - `production`
 
 ## Secrets to add to both environments
@@ -28,7 +28,7 @@ In GitHub:
 Example values:
 
 - `ORACLE_HOST=<public-ip>`
-- `ORACLE_USER=ubuntu`
+- `ORACLE_USER=deploy-<app-id>`
 
 Important:
 
@@ -41,38 +41,36 @@ Important:
 Add:
 
 ```text
-ORACLE_APP_DIR=/opt/apps/<app-name>
-ORACLE_ENV_FILE=/etc/apps/<app-name>/<app-name>.env
-ORACLE_STACK_NAME=<app-name>
-ORACLE_CONTAINER_NAME=<app-name>-api
-ORACLE_HOST_PORT=3600
+ORACLE_APP_ID=<app-name>
+ORACLE_API_DOMAIN=api.<app-name>.example.com
+ORACLE_PORT=3610
+GHCR_IMAGE=ghcr.io/<owner>/<repo>/backend
 ```
 
-## Staging variables
+## Development variables
 
 Add:
 
 ```text
-ORACLE_STAGING_APP_DIR=/opt/apps/<app-name>-staging
-ORACLE_STAGING_ENV_FILE=/etc/apps/<app-name>-staging/<app-name>.env
-ORACLE_STAGING_STACK_NAME=<app-name>-staging
-ORACLE_STAGING_CONTAINER_NAME=<app-name>-staging-api
-ORACLE_STAGING_HOST_PORT=3601
+ORACLE_APP_ID=<app-name>-dev
+ORACLE_API_DOMAIN=api.dev.<app-name>.example.com
+ORACLE_PORT=3611
+GHCR_IMAGE=ghcr.io/<owner>/<repo>/backend
 ```
 
 ## Branch model used here
 
-- `develop` -> staging lane
+- `develop` -> dev lane
 - `main` -> production source lane
+- production can also be promoted manually through the workflow dispatch control
 
 ## Workflow shape
 
-This repo now expects:
+New backend repos should use:
 
-- `Backend CI`
-- `Publish Backend Toolchain`
-- `Deploy Backend Staging`
-- `Deploy Backend Production`
+- `templates/github-actions/deploy-backend-oracle.yml`
+- GitHub environment `dev` for development deploys
+- GitHub environment `production` for production deploys
 
 ## Manual deploy note
 

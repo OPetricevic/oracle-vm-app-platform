@@ -13,7 +13,7 @@ The host owns:
 - backups
 - firewall baseline
 - `/opt/apps`, `/etc/apps`, and `/var/backups/apps`
-- one production/development/staging slot per app
+- one production/development slot per app
 
 Each app owns:
 
@@ -23,6 +23,25 @@ Each app owns:
 - migrations
 - deployment workflow
 - app-specific secrets and env values
+
+## Deployment Contract
+
+For new backend repositories, use:
+
+- [DEPLOYMENT_CONTRACT.md](DEPLOYMENT_CONTRACT.md)
+- [../templates/github-actions/deploy-backend-oracle.yml](../templates/github-actions/deploy-backend-oracle.yml)
+- [../templates/oracle/compose.api.yml](../templates/oracle/compose.api.yml)
+
+The preferred model is frontend on Cloudflare Pages and backend on this host through an API subdomain.
+
+Example:
+
+```text
+my-app.example.com      -> Cloudflare Pages
+api.my-app.example.com  -> Caddy on this host -> 127.0.0.1:<app-port>
+dev.my-app.example.com      -> Cloudflare Pages
+api.dev.my-app.example.com  -> Caddy on this host -> 127.0.0.1:<dev-app-port>
+```
 
 ## Standard App Slots
 
@@ -38,13 +57,6 @@ Development:
 ```text
 /opt/apps/<app-slug>-dev
 /etc/apps/<app-slug>-dev/<app-slug>.env
-```
-
-Staging, for GitHub Actions workflows that use that word:
-
-```text
-/opt/apps/<app-slug>-staging
-/etc/apps/<app-slug>-staging/<app-slug>.env
 ```
 
 Inside each app directory:
@@ -70,8 +82,8 @@ Caddy imports app snippets from:
 API apps usually route to a local port:
 
 ```text
-api.example.com -> 127.0.0.1:3600
-api-dev.example.com -> 127.0.0.1:3601
+api.my-app.example.com -> 127.0.0.1:3610
+api.dev.my-app.example.com -> 127.0.0.1:3611
 ```
 
 Static apps can be served from:
@@ -90,9 +102,10 @@ Production API with PostgreSQL:
 sudo APP_SLUG=my-app \
   ENVIRONMENT=production \
   APP_TYPE=api \
-  PUBLIC_DOMAIN=api.example.com \
-  PORT=3600 \
+  PUBLIC_DOMAIN=api.my-app.example.com \
+  PORT=3610 \
   DB_ENGINE=postgres \
+  DB_NAME=my_app \
   DB_PASS='choose-a-real-url-safe-password' \
   ./provision-app.sh
 ```
@@ -103,9 +116,10 @@ Development API with PostgreSQL:
 sudo APP_SLUG=my-app \
   ENVIRONMENT=development \
   APP_TYPE=api \
-  PUBLIC_DOMAIN=api-dev.example.com \
-  PORT=3601 \
+  PUBLIC_DOMAIN=api.dev.my-app.example.com \
+  PORT=3611 \
   DB_ENGINE=postgres \
+  DB_NAME=my_app_dev \
   DB_PASS='choose-a-real-url-safe-password' \
   ./provision-app.sh
 ```

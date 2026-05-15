@@ -19,7 +19,7 @@ The host bootstrap makes Caddy import snippets from:
 `provision-app.sh` can create a snippet automatically:
 
 ```bash
-sudo APP_SLUG=physio-tracker \
+sudo APP_SLUG=my-app \
   ENVIRONMENT=production \
   APP_TYPE=api \
   PUBLIC_DOMAIN=api.example.com \

@@ -1,0 +1,18 @@
+[Unit]
+Description=Oracle host platform health backend
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/platform-health
+Restart=always
+RestartSec=3
+User=nobody
+Group=nogroup
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
